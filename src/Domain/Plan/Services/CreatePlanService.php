@@ -63,6 +63,7 @@ class CreatePlanService
                 $studyEvents[] = new StudyEvent($day, $hoursToBeAssigned, $chapterToBeAssigned['description']);
 
                 $chapterToBeAssigned['hoursToBeAssigned'] -= $hoursToBeAssigned;
+                $dayHoursToBeAssigned -= $hoursToBeAssigned;
                 $chapterToBeAssigned = $this->getPendingChapter($chapters);
             }
         }
@@ -121,12 +122,12 @@ class CreatePlanService
     private function calculateStudyDays(\DateTime $startDate, \DateTime $endDate, array $allowedWeekDays)
     {
         $dayList = [];
-        while (strtotime($startDate) <= strtotime($endDate)) {
+        while ($startDate <= $endDate) {
             $weekDay = $startDate->format('w');
             if (in_array($weekDay, $allowedWeekDays)) {
-                $dayList[] = $startDate;
+                $dayList[] = clone $startDate;
             }
-            $startDate->add(new DateInterval('P1D'));
+            $startDate = $startDate->add(new DateInterval('P1D'));
         }
 
         return $dayList;
