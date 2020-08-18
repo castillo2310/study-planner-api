@@ -6,9 +6,9 @@ namespace App\Tests\Unit\Domain\Plan\Services;
 
 use PHPUnit\Framework\TestCase;
 use StudyPlanner\Domain\Plan\Plan;
-use StudyPlanner\Domain\Plan\Services\CreatePlanService;
+use StudyPlanner\Domain\Plan\Services\PlanGenerator;
 
-class CreatePlanServiceTest extends TestCase
+class PlanGeneratorTest extends TestCase
 {
     private \DateTime $startDate;
     private \DateTime $endDate;
@@ -39,8 +39,8 @@ class CreatePlanServiceTest extends TestCase
      */
     public function shouldReturnAPlan()
     {
-        $service = new CreatePlanService();
-        $plan = $service->create(
+        $service = new PlanGenerator();
+        $plan = $service->generate(
             $this->startDate,
             $this->endDate,
             $this->dailyStudyHours,
@@ -56,8 +56,8 @@ class CreatePlanServiceTest extends TestCase
      */
     public function shouldReturnAPlanWithTheCorrectNumberOfStudyEvents()
     {
-        $service = new CreatePlanService();
-        $plan = $service->create(
+        $service = new PlanGenerator();
+        $plan = $service->generate(
             $this->startDate,
             $this->endDate,
             $this->dailyStudyHours,
@@ -76,8 +76,8 @@ class CreatePlanServiceTest extends TestCase
     {
         $this->expectException(\Exception::class);
 
-        $service = new CreatePlanService();
-        $service->create(
+        $service = new PlanGenerator();
+        $service->generate(
             $this->startDate,
             new \DateTime('2020-05-02'),
             $this->dailyStudyHours,

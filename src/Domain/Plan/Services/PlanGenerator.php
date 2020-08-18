@@ -10,10 +10,10 @@ use StudyPlanner\Domain\Plan\Plan;
 use StudyPlanner\Domain\StudyEvent\StudyEvent;
 
 /**
- * Class CreatePlanService
+ * Class PlanGenerator
  * @package StudyPlanner\Domain\Plan\Services
  */
-class CreatePlanService
+class PlanGenerator
 {
     /**
      *
@@ -29,7 +29,7 @@ class CreatePlanService
      * @return Plan
      * @throws \Exception
      */
-    public function create(
+    public function generate(
         DateTime $startDate,
         DateTime $endDate,
         int $dailyStudyHours,
