@@ -14,6 +14,9 @@
     "psr/log": {
         "version": "1.1.3"
     },
+    "symfony/asset": {
+        "version": "v5.1.3"
+    },
     "symfony/cache": {
         "version": "v5.1.3"
     },
@@ -146,6 +149,9 @@
     "symfony/string": {
         "version": "v5.1.3"
     },
+    "symfony/twig-pack": {
+        "version": "v1.0.0"
+    },
     "symfony/var-dumper": {
         "version": "v5.1.3"
     },
@@ -154,5 +160,8 @@
     },
     "symfony/yaml": {
         "version": "v5.1.3"
+    },
+    "tecnickcom/tcpdf": {
+        "version": "6.3.5"
     }
 }
