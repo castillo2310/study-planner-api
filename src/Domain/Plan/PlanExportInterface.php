@@ -4,7 +4,9 @@
 namespace StudyPlanner\Domain\Plan;
 
 
-interface PlanExportInterface
+use StudyPlanner\Domain\Shared\Exportable;
+
+interface PlanExportInterface extends Exportable
 {
-    public function export(Plan $plan);
+
 }

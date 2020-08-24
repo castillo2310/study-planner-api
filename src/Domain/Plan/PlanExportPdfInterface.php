@@ -4,7 +4,7 @@
 namespace StudyPlanner\Domain\Plan;
 
 
-interface PlanExportPDFInterface extends PlanExportInterface
+interface PlanExportPdfInterface extends PlanExportInterface
 {
 
 }
