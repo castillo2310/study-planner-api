@@ -45,6 +45,6 @@ class CreatePlanCommandHandler
             $command->getChapters()
         );
 
-        $this->planExporter->export($plan);
+        return $this->planExporter->export($plan);
     }
 }
