@@ -58,11 +58,15 @@ class PlanGenerator
             $dayHoursToBeAssigned = $dailyStudyHours;
 
             while ($dayHoursToBeAssigned > 0 && $chapterToBeAssigned) {
-                $hoursToBeAssigned = min($dayHoursToBeAssigned, $chapterToBeAssigned['hoursToBeAssigned']);
+                $hoursToBeAssigned = min($dayHoursToBeAssigned, $chapterToBeAssigned->hoursToBeAssigned);
 
-                $studyEvents[] = new StudyEvent($day, $hoursToBeAssigned, $chapterToBeAssigned['description']);
+                $studyEvents[] = new StudyEvent(
+                    $day, $hoursToBeAssigned,
+                    $chapterToBeAssigned->description,
+                    $chapterToBeAssigned->color
+                );
 
-                $chapterToBeAssigned['hoursToBeAssigned'] -= $hoursToBeAssigned;
+                $chapterToBeAssigned->hoursToBeAssigned -= $hoursToBeAssigned;
                 $dayHoursToBeAssigned -= $hoursToBeAssigned;
                 $chapterToBeAssigned = $this->getPendingChapter($chapters);
             }
@@ -75,10 +79,10 @@ class PlanGenerator
      * @param array $chapters
      * @return array|null
      */
-    private function getPendingChapter(array $chapters): ?array
+    private function getPendingChapter(array $chapters): ?object
     {
         foreach ($chapters as $chapter) {
-            if ($chapter['hoursToBeAssigned'] > 0) {
+            if ($chapter->hoursToBeAssigned > 0) {
                 return $chapter;
             }
         }
@@ -92,15 +96,30 @@ class PlanGenerator
      */
     private function parseChapters(array $chapters): array
     {
-        foreach ($chapters as &$chapter) {
+        $chapterList = [];
+        foreach ($chapters as $chapter) {
+
             if (!isset($chapter['description']) || !isset($chapter['pages'])) {
                 throw new \InvalidArgumentException('Chapter description and chapter pages are required');
             }
 
-            $chapter['hoursToBeAssigned'] = $this->calculateStudyHoursFromPages($chapter['pages']);
+            $chapterObj = new \stdClass();
+            $chapterObj->description = $chapter['description'];
+            $chapterObj->pages = $chapter['pages'];
+            $chapterObj->hoursToBeAssigned = $this->calculateStudyHoursFromPages($chapter['pages']);
+            $chapterObj->color = $this->setChapterColor();
+
+            $chapterList[] = $chapterObj;
         }
 
-        return $chapters;
+        return $chapterList;
+    }
+
+    private function setChapterColor()
+    {
+        $colors = ['#ff5c5c', '#005885', '#b760e6', '#44d9e6', '#bc658d', '#557571', '#776d8a', '#be9fe1', '#4baea0'];
+        $key = array_rand($colors, 1);
+        return $colors[$key];
     }
 
     /**
@@ -141,7 +160,7 @@ class PlanGenerator
     {
         $totalPages = 0;
         foreach ($chapters as $chapter) {
-            $totalPages += $chapter['pages'];
+            $totalPages += $chapter->pages;
         }
 
         return $totalPages;
