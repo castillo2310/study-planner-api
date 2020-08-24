@@ -60,6 +60,8 @@ class PlanExportPdfTCPDF implements PlanExportPdfInterface
         $this->pdf->setFontSpacing(0);
         $this->pdf->setCellPaddings('', 2);
         $this->pdf->SetFont('helvetica', '', 9);
+
+        $rowHeight = 125 / sizeof($weekList);
         foreach ($weekList as $week) {
             for ($i=0;$i<sizeof($week);$i++){
                 $day = $week[$i];
@@ -78,7 +80,7 @@ class PlanExportPdfTCPDF implements PlanExportPdfInterface
                     }
                 }
                 $html .= '</table>';
-                $this->pdf->WriteHTMLCell(36.71, 25, '', '', $html, $border);
+                $this->pdf->WriteHTMLCell(36.71, $rowHeight, '', '', $html, $border);
             }
             $this->pdf->Ln();
         }
