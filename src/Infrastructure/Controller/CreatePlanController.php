@@ -28,31 +28,31 @@ class CreatePlanController extends AbstractController
 
     public function __invoke(Request $request)
     {
-        $command = new CreatePlanCommand(
-            new \DateTime('2020-05-01'),
-            new \DateTime('2020-05-10'),
-            2,
-            [1,2,3,4,5],
-            [
-                [
-                    'description' => 'Chapter 1',
-                    'pages' => 10
-                ],
-                [
-                    'description' => 'Chapter 2',
-                    'pages' => 3
-                ],
-            ]
-        );
+        try {
+            $startDate = new \DateTime($request->get('startDate'));
+            $endDate = new \DateTime($request->get('endDate'));
 
-        $response = $this->handler->handle($command);
+            $command = new CreatePlanCommand(
+                $startDate,
+                $endDate,
+                $request->get('dailyStudyHours'),
+                $request->get('allowedWeekDays'),
+                $request->get('chapters')
+            );
 
-        return new Response(
-            $response,
-            Response::HTTP_OK,
-            [
-                'Content-Type' => 'application/pdf'
-            ]
-        );
+            $pdf = $this->handler->handle($command);
+
+            return new Response(
+                $pdf,
+                Response::HTTP_OK,
+                [
+                    'Content-Type' => 'application/pdf',
+                    'Content-Disposition' => 'attachment; filename="doc.pdf"',
+                    'Content-Length' => strlen($pdf)
+                ]
+            );
+        } catch (\Throwable $exception) {
+            return $this->json(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 }

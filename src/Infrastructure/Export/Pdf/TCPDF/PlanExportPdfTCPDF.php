@@ -31,7 +31,7 @@ class PlanExportPdfTCPDF implements PlanExportPdfInterface
             $this->drawMonthDays($studyEvents);
         }
 
-        return $this->pdf->Output('doc.pdf');
+        return $this->pdf->Output('doc.pdf', 'S');
     }
 
     private function drawMonthDays(array $studyEvents)
