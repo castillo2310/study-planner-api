@@ -4,21 +4,21 @@
 version: "3.1"
 services:
 
-    webserver:
+    api-webserver:
       image: nginx:alpine
       container_name: study-planner-api-webserver
       working_dir: /application
       volumes:
-          - .:/application
-          - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+          - ./api:/application
+          - ./api/docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
        - "9090:80"
 
-    php-fpm:
-      build: docker/php-fpm
+    api-php-fpm:
+      build: api/docker/php-fpm
       container_name: study-planner-api-php-fpm
       working_dir: /application
       volumes:
-        - .:/application
-        - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+        - ./api:/application
+        - ./api/docker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
 
