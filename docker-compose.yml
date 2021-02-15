@@ -27,3 +27,10 @@ services:
       volumes:
         - ./api:/application
         - ./api/docker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
+
+    webapp:
+      build: webapp/docker
+      container_name: study-planner-webapp
+      working_dir: /application
+      volumes:
+        - ./webapp:/application
