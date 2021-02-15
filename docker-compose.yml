@@ -2,7 +2,15 @@
 #                          Generated on phpdocker.io                          #
 ###############################################################################
 version: "3.1"
+
 services:
+    reverse-proxy:
+      image: nginx:alpine
+      container_name: study-planner-reverse-proxy
+      volumes:
+        - ./reverse_proxy/default.conf:/etc/nginx/conf.d/default.conf
+      ports:
+      - "7070:80"
 
     api-webserver:
       image: nginx:alpine
@@ -11,8 +19,6 @@ services:
       volumes:
           - ./api:/application
           - ./api/docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-      ports:
-       - "9090:80"
 
     api-php-fpm:
       build: api/docker/php-fpm
@@ -21,4 +27,3 @@ services:
       volumes:
         - ./api:/application
         - ./api/docker/php-fpm/php-ini-overrides.ini:/etc/php/7.4/fpm/conf.d/99-overrides.ini
-
