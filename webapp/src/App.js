@@ -7,6 +7,12 @@ import Select from 'react-select';
 import Typed from 'typed.js';
 import moment from 'moment';
 
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+
+toast.configure({
+    hideProgressBar: true
+});
 class App extends React.Component{
 
     weekdays = [
@@ -49,6 +55,11 @@ class App extends React.Component{
 
     handleAddChapter = () => {
         const description = this.state.chapter.description;
+        const pages = this.state.chapter.pages;
+
+        if (!pages || !description) {
+            return toast.error('Please, enter a valid chapter!');
+        }
 
         this.setState(state => {
             return {
@@ -58,10 +69,12 @@ class App extends React.Component{
                 },
                 chapters: state.chapters.concat({
                     description: description,
-                    pages :this.state.chapter.pages
+                    pages: pages
                 })
             };
         }, this.showResult)
+
+        toast.success('Chapter added!');
     };
 
     handleCloseModal = () => {
@@ -95,9 +108,7 @@ class App extends React.Component{
                 }
             });
 
-            console.log('data', data);
             const blob = await data.blob();
-            console.log('blob', blob);
 
             this.setState({
                 pdfLink: URL.createObjectURL(blob),
@@ -108,7 +119,6 @@ class App extends React.Component{
             this.setState({
                 loading: false
             });
-            console.log(e);
         }
     };
 
@@ -140,7 +150,7 @@ class App extends React.Component{
         }
 
         if (this.state.chapters.length > 0) {
-            const chaptersString = this.state.chapters.map(chapter => `&emsp;- ${chapter.description}: ${chapter.pages} pages`).join('<br');
+            const chaptersString = this.state.chapters.map(chapter => `&emsp;- ${chapter.description}: ${chapter.pages} pages`).join('<br>');
             stringList.push(`You will study the following chapters: <br> ${chaptersString}.`);
         }
 
@@ -152,7 +162,6 @@ class App extends React.Component{
                 typeSpeed: 20,
                 showCursor: true,
                 onComplete: function (self) {
-                    console.log('onComplete', self);
                     self.stop();
                 }
             };
@@ -162,8 +171,6 @@ class App extends React.Component{
     };
 
     handleChange = (event) => {
-        console.log(event);
-
         const name = event.target.name;
         const value = event.target.value;
         this.setState(state => {
@@ -197,7 +204,6 @@ class App extends React.Component{
     };
 
     render() {
-
         return (
             <>
                 <Container>
@@ -266,11 +272,11 @@ class App extends React.Component{
                                         <Form.Label>Enter the chapters</Form.Label>
                                         <InputGroup>
                                             <FormControl placeholder="Description" name='description'
-                                                         onChange={this.handleChapterChange} required
+                                                         onChange={this.handleChapterChange}
                                                         value={this.state.chapter.description}/>
 
                                             <FormControl placeholder="Pages" type="number" name='pages' style={{borderTopRightRadius:0, borderBottomRightRadius:0}}
-                                                         onChange={this.handleChapterChange} required
+                                                         onChange={this.handleChapterChange}
                                                          value={this.state.chapter.pages}/>
 
                                             <Button variant="primary" type="button" onClick={this.handleAddChapter}
