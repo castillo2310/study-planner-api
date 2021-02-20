@@ -22,14 +22,6 @@ section#main h1 {
     font-weight: 600 !important;
 }
 
-.btn-generate {
-    font-size: 20px;
-    height: auto;
-    text-transform: uppercase;
-    font-weight: 200;
-    letter-spacing: 5px;
-}
-
 section#form {
     height: 100vh;
     background-color:#f7f7fc !important;
@@ -42,4 +34,45 @@ section#form #result-text {
 
 section#form .form-label, section#form input {
     font-weight: 100;
+}
+
+
+/** react-select */
+.css-1rhbuit-multiValue {
+    background-color: rgb(65, 74, 191) !important;
+}
+.css-12jo7m5 {
+    color:white !important;
+}
+.css-xb97g8 {
+    color:white !important;
+}
+.css-xb97g8:hover {
+    background-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/** buttons */
+.btn-custom {
+    font-size: 20px;
+    height: auto;
+    text-transform: uppercase;
+    font-weight: 200;
+    letter-spacing: 5px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: rgb(65, 74, 191) !important;
+    border-color: rgb(65, 74, 191) !important;
+}
+
+.btn-outline-primary {
+    color: rgb(65, 74, 191);
+    border-color: rgb(65, 74, 191);
+}
+
+.btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:hover {
+    color: #fff;
+    background-color: rgb(65, 74, 191);
+    border-color: rgb(65, 74, 191);
 }

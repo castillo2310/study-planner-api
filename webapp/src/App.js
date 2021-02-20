@@ -1,15 +1,14 @@
 import React from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css';
 import {Container, Row, Col, Navbar, Form, InputGroup, FormControl, Button, Modal} from 'react-bootstrap';
 import Select from 'react-select';
 import Typed from 'typed.js';
 import moment from 'moment';
-
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Spinner from "react-bootstrap/Spinner";
+import './App.css';
 
 toast.configure({
     hideProgressBar: true
@@ -102,7 +101,6 @@ class App extends React.Component{
             this.setState({
                 loading: true
             });
-            return;
 
             const data = await fetch(url, {
                 method: 'POST',
@@ -237,7 +235,7 @@ class App extends React.Component{
                                     <h4 className={'font-weight-light text-light pb-2'}>
                                         Enter the required data and download your study plan.
                                     </h4>
-                                    <Button href="#form" variant="light" size="lg" type="button">
+                                    <Button href="#form" className={'btn-custom'} variant="light" size="lg" type="button">
                                         Get started!
                                     </Button>
                                 </div>
@@ -294,7 +292,7 @@ class App extends React.Component{
                                     <Form.Group>
 
                                     </Form.Group>
-                                    <Button disabled={this.state.loading} className='btn-generate' variant="outline-primary" type="submit" block>
+                                    <Button disabled={this.state.loading} className='btn-custom' variant="outline-primary" type="submit" block>
                                         {this.state.loading ? (<span><Spinner as="span" animation="border"/> Loading ...</span>): 'Generate plan'}
                                     </Button>
                                 </Form>
