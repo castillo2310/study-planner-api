@@ -43,6 +43,7 @@ class App extends React.Component{
             },
             loading: false,
             pdfLink: '',
+            icsLink: '',
             showModal: false,
             scrollDown: false
         };
@@ -86,10 +87,36 @@ class App extends React.Component{
         })
     };
 
+    handleRequest = async (url, body) => {
+        const response = await fetch(url, {
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('There was an error generating your study plan. Please, try again later.');
+        }
+
+        const contentType = response.headers.get("content-type");
+        if (contentType === 'application/json') {
+            const errorData = await response.json();
+            throw new Error(errorData.error);
+        }
+
+        return response;
+    }
+
     handleSubmit = async(event) => {
         event.preventDefault();
 
-        const url = 'http://127.0.0.1:7070/api/plan/create';
+        const url = 'http://127.0.0.1:7070/api/plan/create/';
+        const urlPDF = url+'pdf';
+        const urlICS = url+'ics';
+
         //const url = ' https://cors-anywhere.herokuapp.com/http://15.237.39.82/plan/create';
 
         const body = {
@@ -112,25 +139,15 @@ class App extends React.Component{
                 loading: true
             });
 
-            const data = await fetch(url, {
-                method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify(body),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+            const pdfResponse = await this.handleRequest(urlPDF, body);
+            const pdfBlob = await pdfResponse.blob();
 
-            const contentType = data.headers.get("content-type");
-            if (contentType === 'application/json') {
-                const errorData = await data.json();
-                throw new Error(errorData.error);
-            }
-
-            const blob = await data.blob();
+            const icsResponse = await this.handleRequest(urlICS, body);
+            const icsBlob = await icsResponse.blob();
 
             this.setState({
-                pdfLink: URL.createObjectURL(blob),
+                pdfLink: URL.createObjectURL(pdfBlob),
+                icsLink: URL.createObjectURL(icsBlob),
                 loading: false,
                 showModal: true
             });
@@ -339,9 +356,12 @@ class App extends React.Component{
                         <h4>Successfully generated plan</h4>
                     </Modal.Header>
                     <Modal.Body className={'text-center'}>
-                        <p className={'mb-0'}>Download your plan as PDF and start studying!</p>
-                        <Button className={'my-3 btn-custom'} variant="outline-success" target="_blank" href={this.state.pdfLink} >
-                            Download
+                        <p className={'mb-0'}>Download your plan as PDF or ICS and start studying!</p>
+                        <Button className={'my-3 btn-custom'} variant="outline-success" target="_blank" href={this.state.pdfLink} block>
+                            Download PDF
+                        </Button>
+                        <Button className={'my-3 btn-custom'} variant="outline-info" target="_blank" href={this.state.icsLink} block>
+                            Download ICS
                         </Button>
                     </Modal.Body>
                 </Modal>
