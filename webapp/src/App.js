@@ -100,6 +100,13 @@ class App extends React.Component{
             chapters: this.state.chapters
         };
 
+        if (this.state.chapter.description && this.state.chapter.pages) {
+            body.chapters.push({
+                description: this.state.chapter.description,
+                pages: this.state.chapter.pages
+            });
+        }
+
         try{
             this.setState({
                 loading: true
