@@ -10,6 +10,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import Spinner from "react-bootstrap/Spinner";
 import './App.css';
 
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import { faPlus, faBookOpen } from '@fortawesome/free-solid-svg-icons'
+
 toast.configure({
     hideProgressBar: true
 });
@@ -111,6 +114,12 @@ class App extends React.Component{
                 }
             });
 
+            const contentType = data.headers.get("content-type");
+            if (contentType === 'application/json') {
+                const errorData = await data.json();
+                throw new Error(errorData.error);
+            }
+
             const blob = await data.blob();
 
             this.setState({
@@ -119,6 +128,8 @@ class App extends React.Component{
                 showModal: true
             });
         } catch (e) {
+            toast.error(e.message);
+
             this.setState({
                 loading: false
             });
@@ -153,8 +164,10 @@ class App extends React.Component{
         }
 
         if (this.state.chapters.length > 0) {
-            const chaptersString = this.state.chapters.map(chapter => `&emsp;- ${chapter.description}: ${chapter.pages} pages`).join('<br>');
-            stringList.push(`You will study the following chapters: <br> ${chaptersString}.`);
+            const chaptersString = this.state.chapters
+                .map(chapter => `&emsp;- ${chapter.description}: ${chapter.pages} pages`)
+                .join('<br>');
+            stringList.push(`You will study the following chapters: <br> ${chaptersString}`);
         }
 
         if (stringList.length > 0) {
@@ -236,7 +249,7 @@ class App extends React.Component{
                                         Enter the required data and download your study plan.
                                     </h4>
                                     <Button href="#form" className={'btn-custom'} variant="light" size="lg" type="button">
-                                        Get started!
+                                        Get started! <FontAwesomeIcon icon={faBookOpen} color={'rgb(65, 74, 191)'}/>
                                     </Button>
                                 </div>
                             </Col>
@@ -284,7 +297,7 @@ class App extends React.Component{
 
                                             <Button variant="primary" type="button" onClick={this.handleAddChapter}
                                                     style={{borderTopLeftRadius:0, borderBottomLeftRadius:0}}>
-                                                +
+                                                <FontAwesomeIcon icon={faPlus} color={'white'}/>
                                             </Button>
                                         </InputGroup>
 
@@ -293,7 +306,11 @@ class App extends React.Component{
 
                                     </Form.Group>
                                     <Button disabled={this.state.loading} className='btn-custom' variant="outline-primary" type="submit" block>
-                                        {this.state.loading ? (<span><Spinner as="span" animation="border"/> Loading ...</span>): 'Generate plan'}
+                                        {
+                                            this.state.loading
+                                                ? (<span><Spinner as="span" animation="border"/> Loading ...</span>)
+                                                : 'Generate plan'
+                                        }
                                     </Button>
                                 </Form>
                             </Col>
@@ -312,11 +329,12 @@ class App extends React.Component{
                     onHide={this.handleCloseModal}
                 >
                     <Modal.Header closeButton>
+                        <h4>Successfully generated plan</h4>
                     </Modal.Header>
                     <Modal.Body className={'text-center'}>
-                        <h4 >Successfully generated plan!</h4>
-                        <Button className={'my-3'} variant="outline-success" target="_blank" href={this.state.pdfLink} >
-                            Download plan as PDF
+                        <p className={'mb-0'}>Download your plan as PDF and start studying!</p>
+                        <Button className={'my-3 btn-custom'} variant="outline-success" target="_blank" href={this.state.pdfLink} >
+                            Download
                         </Button>
                     </Modal.Body>
                 </Modal>
