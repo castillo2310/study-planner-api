@@ -97,14 +97,14 @@ class App extends React.Component{
             }
         });
 
-        if (!response.ok) {
-            throw new Error('There was an error generating your study plan. Please, try again later.');
-        }
-
         const contentType = response.headers.get("content-type");
         if (contentType === 'application/json') {
             const errorData = await response.json();
             throw new Error(errorData.error);
+        }
+
+        if (!response.ok) {
+            throw new Error('There was an error generating your study plan. Please, try again later.');
         }
 
         return response;
