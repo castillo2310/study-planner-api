@@ -6,6 +6,10 @@ body {
     min-height: 100%;
 }
 
+.navbar-dark .navbar-brand:hover {
+    color: inherit !important;
+}
+
 nav.onScroll {
     background-color: white;
 }

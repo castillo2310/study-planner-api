@@ -248,7 +248,7 @@ class App extends React.Component{
             <>
                 <Container>
                     <Navbar fixed="top" variant="dark" className={`top-menu ${this.state.scrollDown ? 'onScroll' : ''} `}>
-                        <Navbar.Brand href="#home">
+                        <Navbar.Brand href="#">
                             {/*<img
                             alt=""
                             src="/logo.svg"
