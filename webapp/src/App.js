@@ -9,6 +9,7 @@ import moment from 'moment';
 
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import Spinner from "react-bootstrap/Spinner";
 
 toast.configure({
     hideProgressBar: true
@@ -98,6 +99,10 @@ class App extends React.Component{
         };
 
         try{
+            this.setState({
+                loading: true
+            });
+            return;
 
             const data = await fetch(url, {
                 method: 'POST',
@@ -289,8 +294,8 @@ class App extends React.Component{
                                     <Form.Group>
 
                                     </Form.Group>
-                                    <Button className='btn-generate' variant="outline-primary" type="submit" block>
-                                        Generate plan
+                                    <Button disabled={this.state.loading} className='btn-generate' variant="outline-primary" type="submit" block>
+                                        {this.state.loading ? (<span><Spinner as="span" animation="border"/> Loading ...</span>): 'Generate plan'}
                                     </Button>
                                 </Form>
                             </Col>
