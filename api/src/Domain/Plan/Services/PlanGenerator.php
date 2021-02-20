@@ -37,6 +37,14 @@ class PlanGenerator
         array $chapters
     ): Plan {
         $chapters = $this->parseChapters($chapters);
+        if (empty($chapters)) {
+            throw new \InvalidArgumentException('Chapters should not be empty.');
+        }
+
+        if (empty($allowedWeekDays)) {
+            throw new \InvalidArgumentException('Week days should not be empty.');
+        }
+
         $studyDays = $this->calculateStudyDays(
             $startDate,
             $endDate,
