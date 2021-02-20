@@ -4,12 +4,13 @@
 namespace StudyPlanner\Application\Plan\Create;
 
 
-use DateInterval;
-use StudyPlanner\Application\Plan\Export\PlanExporter;
-use StudyPlanner\Domain\Plan\Plan;
+use StudyPlanner\Domain\Plan\PlanExportInterface;
 use StudyPlanner\Domain\Plan\Services\PlanGenerator;
-use StudyPlanner\Domain\StudyEvent\StudyEvent;
 
+/**
+ * Class CreatePlanCommandHandler
+ * @package StudyPlanner\Application\Plan\Create
+ */
 class CreatePlanCommandHandler
 {
     /**
@@ -18,23 +19,26 @@ class CreatePlanCommandHandler
     private PlanGenerator $planGenerator;
 
     /**
-     * @var PlanExporter
+     * @var PlanExportInterface
      */
-    private PlanExporter $planExporter;
+    private PlanExportInterface $planExport;
 
     /**
      * CreatePlanCommandHandler constructor.
      * @param PlanGenerator $planGenerator
-     * @param PlanExporter $planExporter
+     * @param PlanExportInterface $planExport
      */
-    public function __construct(
-        PlanGenerator $planGenerator,
-        PlanExporter $planExporter
-    ) {
+    public function __construct(PlanGenerator $planGenerator, PlanExportInterface $planExport)
+    {
         $this->planGenerator = $planGenerator;
-        $this->planExporter = $planExporter;
+        $this->planExport = $planExport;
     }
 
+    /**
+     * @param CreatePlanCommand $command
+     * @return mixed
+     * @throws \Exception
+     */
     public function handle(CreatePlanCommand $command)
     {
         $plan = $this->planGenerator->generate(
@@ -45,6 +49,6 @@ class CreatePlanCommandHandler
             $command->getChapters()
         );
 
-        return $this->planExporter->export($plan);
+        return $this->planExport->export($plan);
     }
 }

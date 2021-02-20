@@ -1,8 +1,7 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+plan_create_pdf:
+    path: '/plan/create/pdf'
+    defaults: { _controller: 'StudyPlanner\Infrastructure\Controller\CreatePDFPlanController' }
 
-
-plan_create:
-    path: '/plan/create'
-    defaults: { _controller: 'StudyPlanner\Infrastructure\Controller\CreatePlanController' }
+plan_create_ics:
+    path: '/plan/create/ics'
+    defaults: { _controller: 'StudyPlanner\Infrastructure\Controller\CreateICSPlanController' }

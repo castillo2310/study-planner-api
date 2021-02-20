@@ -7,10 +7,16 @@ namespace StudyPlanner\Infrastructure\Controller;
 use StudyPlanner\Application\Plan\Create\CreatePlanCommand;
 use StudyPlanner\Application\Plan\Create\CreatePlanCommandHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class CreatePlanController extends AbstractController
+/**
+ * Class CreateICSPlanController
+ * @package StudyPlanner\Infrastructure\Controller
+ */
+class CreateICSPlanController extends AbstractController
 {
     /**
      * @var CreatePlanCommandHandler
@@ -18,14 +24,18 @@ class CreatePlanController extends AbstractController
     private CreatePlanCommandHandler $handler;
 
     /**
-     * CreatePlanController constructor.
-     * @param CreatePlanCommandHandler $handler
+     * CreateICSPlanController constructor.
+     * @param CreatePlanCommandHandler $handlerICS
      */
-    public function __construct(CreatePlanCommandHandler $handler)
+    public function __construct(CreatePlanCommandHandler $handlerICS)
     {
-        $this->handler = $handler;
+        $this->handler = $handlerICS;
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse|Response
+     */
     public function __invoke(Request $request)
     {
         try {
@@ -40,17 +50,15 @@ class CreatePlanController extends AbstractController
                 $request->get('chapters')
             );
 
-            $pdf = $this->handler->handle($command);
+            $ics = $this->handler->handle($command);
 
-            return new Response(
-                $pdf,
-                Response::HTTP_OK,
-                [
-                    'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'attachment; filename="doc.pdf"',
-                    'Content-Length' => strlen($pdf)
-                ]
-            );
+            $response = new StreamedResponse(function () use ($ics) {
+                echo $ics;
+            });
+            $response->headers->set('Content-Type', 'text/calendar; charset=utf-8');
+            $response->headers->set('Content-Disposition', 'attachment; filename="studyPlanner.ics"');
+
+            return $response;
         } catch (\Throwable $exception) {
             return $this->json(['error' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
         }

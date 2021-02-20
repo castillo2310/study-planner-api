@@ -80,7 +80,6 @@ class PlanGenerator
                 $dayHoursToBeAssigned -= $hoursToBeAssigned;
                 $chapterToBeAssigned = $this->getPendingChapter($chapters);
 
-
                 $day->modify("+ $hoursToBeAssigned hour");
             }
         }

@@ -5,6 +5,7 @@
         "php": "^7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "eluceo/ical": "^2@dev",
         "nelmio/cors-bundle": "^2.1",
         "symfony-bundles/json-request-bundle": "^3.1",
         "symfony/asset": "5.1.*",
