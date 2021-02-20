@@ -15,9 +15,7 @@ use StudyPlanner\Domain\StudyEvent\StudyEvent;
  */
 class PlanGenerator
 {
-    /**
-     *
-     */
+    const DEFAULT_START_HOUR = 12;
     const RECOMMENDED_PAGES_PER_HOUR = 1.5;
 
     /**
@@ -62,14 +60,18 @@ class PlanGenerator
         $studyEvents = [];
         $chapterToBeAssigned = $this->getPendingChapter($chapters);
         for ($i = 0; $i < count($studyDays) && $chapterToBeAssigned; $i++) {
+            /** @var DateTime $day */
             $day = $studyDays[$i];
+            $day->setTime(self::DEFAULT_START_HOUR, 0);
+
             $dayHoursToBeAssigned = $dailyStudyHours;
 
             while ($dayHoursToBeAssigned > 0 && $chapterToBeAssigned) {
                 $hoursToBeAssigned = min($dayHoursToBeAssigned, $chapterToBeAssigned->hoursToBeAssigned);
 
                 $studyEvents[] = new StudyEvent(
-                    $day, $hoursToBeAssigned,
+                    clone $day,
+                    $hoursToBeAssigned,
                     $chapterToBeAssigned->description,
                     $chapterToBeAssigned->color
                 );
@@ -77,6 +79,9 @@ class PlanGenerator
                 $chapterToBeAssigned->hoursToBeAssigned -= $hoursToBeAssigned;
                 $dayHoursToBeAssigned -= $hoursToBeAssigned;
                 $chapterToBeAssigned = $this->getPendingChapter($chapters);
+
+
+                $day->modify("+ $hoursToBeAssigned hour");
             }
         }
 
