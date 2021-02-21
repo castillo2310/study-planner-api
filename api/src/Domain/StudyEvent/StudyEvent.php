@@ -12,6 +12,7 @@ class StudyEvent
     private int $hours;
     private string $description;
     private string $color;
+    //TODO: pageStart, pageEnd
 
     /**
      * StudyEvent constructor.

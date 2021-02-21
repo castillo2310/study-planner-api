@@ -53,7 +53,7 @@ class PlanExportICSiCal implements PlanExportICSInterface
         $uniqueIdentifier = new UniqueIdentifier($uniqueId);
 
         $eventStart = $studyEvent->getDate();
-        $eventEnd = $eventStart->modify('+'.$studyEvent->getHours().' hours');
+        $eventEnd = \DateTimeImmutable::createFromMutable($eventStart)->modify('+'.$studyEvent->getHours().' hours');
 
         $start = new DateTime($eventStart, false);
         $end = new DateTime($eventEnd, false);
